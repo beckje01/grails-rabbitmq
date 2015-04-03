@@ -6,4 +6,6 @@ plugin.xml
 grails-rabbitmq-*.zip*
 target
 web-app/WEB-INF/classes/
-
+.idea
+*.iml
+*.ipr
