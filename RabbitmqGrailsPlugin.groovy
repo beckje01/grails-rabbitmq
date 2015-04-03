@@ -23,9 +23,9 @@ import org.springframework.retry.support.RetryTemplate
 
 class RabbitmqGrailsPlugin {
     // the plugin version
-    def version = "1.0.0"
+    def version = "1.0.1-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "1.2 > *"
+    def grailsVersion = "2.0 > *"
     // the other plugins this plugin depends on
     def dependsOn = [:]
     // resources that are excluded from plugin packaging
@@ -256,7 +256,7 @@ class RabbitmqGrailsPlugin {
             // running.
             def containerBeans = applicationContext.getBeansOfType(SimpleMessageListenerContainer)
             containerBeans.each { beanName, bean ->
-                if (!bean.running) {
+                if (!bean.isRunning()) {
                     initialiseAdviceChain bean, applicationContext
                     bean.start()
                 }
