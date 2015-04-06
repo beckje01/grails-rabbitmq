@@ -70,6 +70,7 @@ class RabbitmqGrailsPlugin {
         def connectionFactoryPort = connectionFactoryConfig?.port
         def connectionChannelCacheSize = connectionFactoryConfig?.channelCacheSize ?: 10
 
+
         def messageConverterBean = rabbitmqConfig?.messageConverterBean
 
         if(!connectionFactoryUsername || !connectionFactoryPassword || !connectionFactoryHostname) {
@@ -216,6 +217,8 @@ class RabbitmqGrailsPlugin {
     }
 
     def doWithApplicationContext = { applicationContext ->
+        def autoStart = ((application.config.rabbitmq?.autoStart == true) || (application.config.rabbitmq?.autoStart == null))
+
         def containerBeans = applicationContext.getBeansOfType(SimpleMessageListenerContainer)
         if(applicationContext.rabbitTemplate?.messageConverter instanceof org.springframework.amqp.support.converter.AbstractMessageConverter) {
             applicationContext.rabbitTemplate.messageConverter.createMessageIds = true
@@ -224,8 +227,10 @@ class RabbitmqGrailsPlugin {
             if(isServiceListener(beanName)) {
                 initialiseAdviceChain bean, applicationContext
 
-                // Now that the listener is properly configured, we can start it.
-                bean.start()
+                // Now that the listener is properly configured, we can start it
+                if(autoStart){
+                    bean.start()
+                }
             }
         }
     }
